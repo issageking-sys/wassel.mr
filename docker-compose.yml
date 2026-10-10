@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment: { POSTGRES_PASSWORD: "${DB_PASSWORD}", POSTGRES_DB: wassel }
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U postgres"], interval: 5s, retries: 10 }
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      DATABASE_URL: "postgresql://postgres:${DB_PASSWORD}@db:5432/wassel"
+      DIRECT_URL: "postgresql://postgres:${DB_PASSWORD}@db:5432/wassel"
+      APP_SECRET: "${APP_SECRET}"
+      STORAGE_DRIVER: local
+      STORAGE_LOCAL_DIR: /data/storage
+    volumes: ["storage:/data/storage"]
+    ports: ["3000:3000"]
+volumes: { pgdata: {}, storage: {} }
