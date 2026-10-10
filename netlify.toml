@@ -1,6 +1,2 @@
-# Netlify build for WASSEL (Next.js + Prisma + Supabase).
-# Required env vars (set in Netlify UI, NOT in this file): DATABASE_URL, DIRECT_URL, APP_SECRET,
-# STORAGE_DRIVER=supabase, SUPABASE_URL, SUPABASE_SERVICE_KEY, SUPABASE_BUCKET.
-# First deploy only: OWNER_PHONE, OWNER_NAME, OWNER_PASSWORD (delete them after the first successful deploy).
 [build]
-  command = "npx prisma generate && npx prisma db push --skip-generate && npm run db:triggers && npx tsx prisma/bootstrap.ts --if-needed && npm run build"
+command = "npm run build"
